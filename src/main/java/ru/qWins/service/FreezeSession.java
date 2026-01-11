@@ -6,19 +6,17 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
 
+@Getter
 public class FreezeSession {
 
     private final UUID staffId;
     private final UUID targetId;
     private final Location originalLocation;
     @Setter
-    @Getter
     private int titleTaskId = -1;
     @Setter
-    @Getter
     private int messageTaskId = -1;
     @Setter
-    @Getter
     private int staffTitleTaskId = -1;
 
     public FreezeSession(UUID staffId, UUID targetId, Location originalLocation) {
@@ -27,15 +25,4 @@ public class FreezeSession {
         this.originalLocation = originalLocation;
     }
 
-    public UUID staffId() {
-        return staffId;
-    }
-
-    public UUID targetId() {
-        return targetId;
-    }
-
-    public Location originalLocation() {
-        return originalLocation;
-    }
 }

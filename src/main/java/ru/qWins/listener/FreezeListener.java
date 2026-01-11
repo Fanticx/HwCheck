@@ -65,10 +65,10 @@ public class FreezeListener implements Listener {
             return;
         }
         if (event.getFrom().getX() == event.getTo().getX()
-            && event.getFrom().getY() == event.getTo().getY()
-            && event.getFrom().getZ() == event.getTo().getZ()
-            && event.getFrom().getYaw() == event.getTo().getYaw()
-            && event.getFrom().getPitch() == event.getTo().getPitch()) {
+                && event.getFrom().getY() == event.getTo().getY()
+                && event.getFrom().getZ() == event.getTo().getZ()
+                && event.getFrom().getYaw() == event.getTo().getYaw()
+                && event.getFrom().getPitch() == event.getTo().getPitch()) {
             return;
         }
         event.setCancelled(true);
