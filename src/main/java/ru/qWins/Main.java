@@ -20,7 +20,7 @@ import ru.qWins.command.FreezeCommand;
 import ru.qWins.command.UnfreezeCommand;
 import ru.qWins.listener.FreezeListener;
 import ru.qWins.placeholder.HwCheckPlaceholderExpansion;
-import ru.qWins.service.FreezeService;
+import ru.qWins.freeze.FreezeService;
 import ru.qWins.util.MessageFormatter;
 
 @Name("HwCheck")
@@ -48,26 +48,26 @@ public class Main extends JavaPlugin {
             it.saveDefaults();
             it.load(true);
         });
-        this.messageFormatter = new MessageFormatter(config);
+        this.messageFormatter = new MessageFormatter();
         FreezeService freezeService = new FreezeService(this, config, messageFormatter);
+        Config.Messages.System systemMessages = config.getMessages().getSystem();
         this.liteCommands = LiteBukkitFactory.builder(this)
             .commands(
                 new FreezeCommand(freezeService, config, messageFormatter),
                 new UnfreezeCommand(freezeService, config, messageFormatter)
             )
-            .message(LiteMessages.INVALID_USAGE, Message.of(invalidUsage -> {
-                String usage = invalidUsage.getSchematic().first();
-                String text = config.getMessages().getSystem().getInvalidUsage().replace("{usage}", usage);
-                return messageFormatter.format(text);
-            }))
-            .message(LiteBukkitMessages.PLAYER_NOT_FOUND, Message.of(input -> {
-                String name = input == null ? "" : input;
-                String text = config.getMessages().getSystem().getPlayerNotFound().replace("{input}", name);
-                return messageFormatter.format(text);
-            }))
+            .message(LiteMessages.INVALID_USAGE, Message.of(invalidUsage ->
+                messageFormatter.format(systemMessages.getInvalidUsage()
+                    .replace("{usage}", invalidUsage.getSchematic().first()))
+            ))
+            .message(LiteBukkitMessages.PLAYER_NOT_FOUND, Message.of(input ->
+                messageFormatter.format(systemMessages.getPlayerNotFound()
+                    .replace("{input}", input == null ? "" : input))
+            ))
             .build();
-        getServer().getPluginManager().registerEvents(new FreezeListener(freezeService, config, messageFormatter), this);
-        if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+        var pluginManager = getServer().getPluginManager();
+        pluginManager.registerEvents(new FreezeListener(freezeService, config, messageFormatter), this);
+        if (pluginManager.isPluginEnabled("PlaceholderAPI")) {
             new HwCheckPlaceholderExpansion(this, freezeService, config).register();
         }
         getLogger().info("[HwCheck] плагин включен.");

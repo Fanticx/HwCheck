@@ -1,4 +1,4 @@
-package ru.qWins.service;
+package ru.qWins.freeze;
 
 import java.util.UUID;
 
@@ -24,5 +24,4 @@ public class FreezeSession {
         this.targetId = targetId;
         this.originalLocation = originalLocation;
     }
-
 }

@@ -1,23 +1,24 @@
 package ru.qWins.placeholder;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import java.util.Locale;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import ru.qWins.Config;
-import ru.qWins.service.FreezeService;
-import ru.qWins.util.TextUtil;
+import ru.qWins.freeze.FreezeService;
+import ru.qWins.util.ColorUtil;
 
 public class HwCheckPlaceholderExpansion extends PlaceholderExpansion {
 
     private final Plugin plugin;
     private final FreezeService freezeService;
-    private final Config config;
+    private final Config.Placeholders.Status statusPlaceholders;
 
     public HwCheckPlaceholderExpansion(Plugin plugin, FreezeService freezeService, Config config) {
         this.plugin = plugin;
         this.freezeService = freezeService;
-        this.config = config;
+        this.statusPlaceholders = config.getPlaceholders().getStatus();
     }
 
     @Override
@@ -50,13 +51,13 @@ public class HwCheckPlaceholderExpansion extends PlaceholderExpansion {
         if (player == null) {
             return "";
         }
-        String key = params.toLowerCase();
+        String key = params.toLowerCase(Locale.ROOT);
         switch (key) {
             case "status" -> {
                 boolean active = freezeService.isFrozen(player) || freezeService.isStaffChecking(player);
-                return TextUtil.colorize(active
-                    ? config.getPlaceholders().getStatus().getOnCheck()
-                    : config.getPlaceholders().getStatus().getOffCheck());
+                return ColorUtil.use(active
+                    ? statusPlaceholders.getOnCheck()
+                    : statusPlaceholders.getOffCheck());
             }
             case "staff" -> {
                 Player staff = freezeService.getStaffForTarget(player);

@@ -1,4 +1,4 @@
-package ru.qWins.service;
+package ru.qWins.freeze;
 
 public enum FreezeResult {
     SUCCESS,

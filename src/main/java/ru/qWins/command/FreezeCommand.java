@@ -7,21 +7,21 @@ import dev.rollczi.litecommands.annotations.permission.Permission;
 import dev.rollczi.litecommands.annotations.context.Sender;
 import org.bukkit.entity.Player;
 import ru.qWins.Config;
-import ru.qWins.service.FreezeResult;
-import ru.qWins.service.FreezeService;
+import ru.qWins.freeze.FreezeResult;
+import ru.qWins.freeze.FreezeService;
 import ru.qWins.util.MessageFormatter;
 
 @Command(name = "freezing", aliases = {"frz"})
 public class FreezeCommand {
 
     private final FreezeService freezeService;
-    private final Config config;
     private final MessageFormatter messageFormatter;
+    private final Config.Messages.Errors errorMessages;
 
     public FreezeCommand(FreezeService freezeService, Config config, MessageFormatter messageFormatter) {
         this.freezeService = freezeService;
-        this.config = config;
         this.messageFormatter = messageFormatter;
+        this.errorMessages = config.getMessages().getErrors();
     }
 
     @Execute
@@ -32,13 +32,13 @@ public class FreezeCommand {
             case SUCCESS -> {
             }
             case SELF_FREEZE -> sender.sendMessage(messageFormatter.format(
-                config.getMessages().getErrors().getSelfFreeze()
+                errorMessages.getSelfFreeze()
             ));
             case STAFF_ALREADY_CHECKING -> {
                 Player currentTarget = freezeService.getTargetForStaff(sender);
                 Player placeholderTarget = currentTarget != null ? currentTarget : target;
                 sender.sendMessage(messageFormatter.format(
-                    config.getMessages().getErrors().getModeratorBusy(),
+                    errorMessages.getModeratorBusy(),
                     sender,
                     placeholderTarget
                 ));
@@ -47,13 +47,13 @@ public class FreezeCommand {
                 Player currentStaff = freezeService.getStaffForTarget(target);
                 if (currentStaff != null) {
                     sender.sendMessage(messageFormatter.format(
-                        config.getMessages().getErrors().getTargetHasModerator(),
+                        errorMessages.getTargetHasModerator(),
                         currentStaff,
                         target
                     ));
                 } else {
                     sender.sendMessage(messageFormatter.format(
-                        config.getMessages().getErrors().getAlreadyFrozen()
+                        errorMessages.getAlreadyFrozen()
                     ));
                 }
             }

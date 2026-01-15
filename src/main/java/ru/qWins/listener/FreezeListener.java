@@ -1,7 +1,6 @@
 package ru.qWins.listener;
 
-import java.util.Locale;
-import java.util.Set;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -12,21 +11,22 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.Location;
 import org.bukkit.util.Vector;
 import ru.qWins.Config;
-import ru.qWins.service.FreezeService;
+import ru.qWins.freeze.FreezeService;
 import ru.qWins.util.MessageFormatter;
 
 public class FreezeListener implements Listener {
 
     private final FreezeService freezeService;
-    private final Config config;
     private final MessageFormatter messageFormatter;
+    private final Config.Messages.Errors errorMessages;
 
     public FreezeListener(FreezeService freezeService, Config config, MessageFormatter messageFormatter) {
         this.freezeService = freezeService;
-        this.config = config;
         this.messageFormatter = messageFormatter;
+        this.errorMessages = config.getMessages().getErrors();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -35,24 +35,11 @@ public class FreezeListener implements Listener {
         if (!freezeService.isFrozen(player)) {
             return;
         }
-        String raw = event.getMessage();
-        if (raw.isBlank()) {
-            return;
-        }
-        String[] parts = raw.trim().split("\\s+");
-        String command = parts[0].toLowerCase(Locale.ROOT);
-        if (command.startsWith("/")) {
-            command = command.substring(1);
-        }
-        if (command.contains(":")) {
-            command = command.substring(command.indexOf(':') + 1);
-        }
-        Set<String> allowed = freezeService.getAllowedCommands();
-        if (allowed.contains(command)) {
+        if (freezeService.isAllowedCommand(event.getMessage())) {
             return;
         }
         event.setCancelled(true);
-        player.sendMessage(messageFormatter.format(config.getMessages().getErrors().getCommandBlocked()));
+        player.sendMessage(messageFormatter.format(errorMessages.getCommandBlocked()));
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -64,11 +51,7 @@ public class FreezeListener implements Listener {
         if (freezeService.isTeleporting(player)) {
             return;
         }
-        if (event.getFrom().getX() == event.getTo().getX()
-                && event.getFrom().getY() == event.getTo().getY()
-                && event.getFrom().getZ() == event.getTo().getZ()
-                && event.getFrom().getYaw() == event.getTo().getYaw()
-                && event.getFrom().getPitch() == event.getTo().getPitch()) {
+        if (!hasMoved(event)) {
             return;
         }
         event.setCancelled(true);
@@ -78,18 +61,18 @@ public class FreezeListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onDamage(EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player player && freezeService.isFrozen(player)) {
+        if (isFrozenPlayer(event.getEntity())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onDamageByEntity(EntityDamageByEntityEvent event) {
-        if (event.getEntity() instanceof Player target && freezeService.isFrozen(target)) {
+        if (isFrozenPlayer(event.getEntity())) {
             event.setCancelled(true);
             return;
         }
-        if (event.getDamager() instanceof Player damager && freezeService.isFrozen(damager)) {
+        if (isFrozenPlayer(event.getDamager())) {
             event.setCancelled(true);
         }
     }
@@ -109,5 +92,19 @@ public class FreezeListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         freezeService.handleQuit(event.getPlayer());
+    }
+
+    private boolean hasMoved(PlayerMoveEvent event) {
+        Location from = event.getFrom();
+        Location to = event.getTo();
+        return from.getX() != to.getX()
+                || from.getY() != to.getY()
+                || from.getZ() != to.getZ()
+                || from.getYaw() != to.getYaw()
+                || from.getPitch() != to.getPitch();
+    }
+
+    private boolean isFrozenPlayer(Entity entity) {
+        return entity instanceof Player player && freezeService.isFrozen(player);
     }
 }
