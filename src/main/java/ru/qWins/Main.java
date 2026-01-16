@@ -70,7 +70,6 @@ public class Main extends JavaPlugin {
         if (pluginManager.isPluginEnabled("PlaceholderAPI")) {
             new HwCheckPlaceholderExpansion(this, freezeService, config).register();
         }
-        getLogger().info("[HwCheck] плагин включен.");
     }
 
     @Override
