@@ -20,7 +20,7 @@ import ru.qWins.command.FreezeCommand;
 import ru.qWins.command.UnfreezeCommand;
 import ru.qWins.listener.FreezeListener;
 import ru.qWins.placeholder.HwCheckPlaceholderExpansion;
-import ru.qWins.freeze.FreezeService;
+import ru.qWins.freeze.FreezeManager;
 import ru.qWins.util.MessageFormatter;
 
 @Name("HwCheck")
@@ -49,7 +49,7 @@ public class Main extends JavaPlugin {
             it.load(true);
         });
         this.messageFormatter = new MessageFormatter();
-        FreezeService freezeService = new FreezeService(this, config, messageFormatter);
+        FreezeManager freezeService = new FreezeManager(this, config, messageFormatter);
         Config.Messages.System systemMessages = config.getMessages().getSystem();
         this.liteCommands = LiteBukkitFactory.builder(this)
             .commands(

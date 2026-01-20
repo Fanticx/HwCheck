@@ -14,16 +14,16 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 import ru.qWins.Config;
-import ru.qWins.freeze.FreezeService;
+import ru.qWins.freeze.FreezeManager;
 import ru.qWins.util.MessageFormatter;
 
 public class FreezeListener implements Listener {
 
-    private final FreezeService freezeService;
+    private final FreezeManager freezeService;
     private final MessageFormatter messageFormatter;
     private final Config.Messages.Errors errorMessages;
 
-    public FreezeListener(FreezeService freezeService, Config config, MessageFormatter messageFormatter) {
+    public FreezeListener(FreezeManager freezeService, Config config, MessageFormatter messageFormatter) {
         this.freezeService = freezeService;
         this.messageFormatter = messageFormatter;
         this.errorMessages = config.getMessages().getErrors();

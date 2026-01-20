@@ -7,18 +7,18 @@ import dev.rollczi.litecommands.annotations.permission.Permission;
 import dev.rollczi.litecommands.annotations.context.Sender;
 import org.bukkit.entity.Player;
 import ru.qWins.Config;
-import ru.qWins.freeze.FreezeResult;
-import ru.qWins.freeze.FreezeService;
+import ru.qWins.freeze.type.FreezeResult;
+import ru.qWins.freeze.FreezeManager;
 import ru.qWins.util.MessageFormatter;
 
 @Command(name = "freezing", aliases = {"frz"})
 public class FreezeCommand {
 
-    private final FreezeService freezeService;
+    private final FreezeManager freezeService;
     private final MessageFormatter messageFormatter;
     private final Config.Messages.Errors errorMessages;
 
-    public FreezeCommand(FreezeService freezeService, Config config, MessageFormatter messageFormatter) {
+    public FreezeCommand(FreezeManager freezeService, Config config, MessageFormatter messageFormatter) {
         this.freezeService = freezeService;
         this.messageFormatter = messageFormatter;
         this.errorMessages = config.getMessages().getErrors();

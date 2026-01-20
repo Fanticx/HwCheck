@@ -6,16 +6,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import ru.qWins.Config;
-import ru.qWins.freeze.FreezeService;
+import ru.qWins.freeze.FreezeManager;
 import ru.qWins.util.ColorUtil;
 
 public class HwCheckPlaceholderExpansion extends PlaceholderExpansion {
 
     private final Plugin plugin;
-    private final FreezeService freezeService;
+    private final FreezeManager freezeService;
     private final Config.Placeholders.Status statusPlaceholders;
 
-    public HwCheckPlaceholderExpansion(Plugin plugin, FreezeService freezeService, Config config) {
+    public HwCheckPlaceholderExpansion(Plugin plugin, FreezeManager freezeService, Config config) {
         this.plugin = plugin;
         this.freezeService = freezeService;
         this.statusPlaceholders = config.getPlaceholders().getStatus();
@@ -28,12 +28,12 @@ public class HwCheckPlaceholderExpansion extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getAuthor() {
-        return plugin.getDescription().getAuthors().toString();
+        return "qWins";
     }
 
     @Override
     public @NotNull String getVersion() {
-        return plugin.getDescription().getVersion();
+        return "1.0.0";
     }
 
     @Override

@@ -1,4 +1,4 @@
-package ru.qWins.freeze;
+package ru.qWins.freeze.type;
 
 public enum UnfreezeResult {
     SUCCESS,

@@ -7,18 +7,18 @@ import dev.rollczi.litecommands.annotations.permission.Permission;
 import dev.rollczi.litecommands.annotations.context.Sender;
 import org.bukkit.entity.Player;
 import ru.qWins.Config;
-import ru.qWins.freeze.FreezeService;
-import ru.qWins.freeze.UnfreezeResult;
+import ru.qWins.freeze.FreezeManager;
+import ru.qWins.freeze.type.UnfreezeResult;
 import ru.qWins.util.MessageFormatter;
 
 @Command(name = "unfreezing", aliases = {"unfrz"})
 public class UnfreezeCommand {
 
-    private final FreezeService freezeService;
+    private final FreezeManager freezeService;
     private final MessageFormatter messageFormatter;
     private final Config.Messages.Errors errorMessages;
 
-    public UnfreezeCommand(FreezeService freezeService, Config config, MessageFormatter messageFormatter) {
+    public UnfreezeCommand(FreezeManager freezeService, Config config, MessageFormatter messageFormatter) {
         this.freezeService = freezeService;
         this.messageFormatter = messageFormatter;
         this.errorMessages = config.getMessages().getErrors();
