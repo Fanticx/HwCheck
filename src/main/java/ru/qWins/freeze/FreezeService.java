@@ -2,7 +2,6 @@ package ru.qWins.freeze;
 
 import java.util.UUID;
 import org.bukkit.Location;
-import org.bukkit.Bukkit;
 
 public class FreezeService {
 
@@ -48,17 +47,5 @@ public class FreezeService {
     }
     public void setStaffTitleTaskId(int taskId) {
         this.staffTitleTaskId = taskId;
-    }
-
-    public void cancelTasks() {
-        cancelTask(titleTaskId); titleTaskId = -1;
-        cancelTask(messageTaskId); messageTaskId = -1;
-        cancelTask(staffTitleTaskId); staffTitleTaskId = -1;
-    }
-
-    private void cancelTask(int taskId) {
-        if (taskId > 0) {
-            Bukkit.getScheduler().cancelTask(taskId);
-        }
     }
 }
